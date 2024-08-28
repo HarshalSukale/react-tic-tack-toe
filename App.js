@@ -1,68 +1,56 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; // Optional for styling
 
-const TicTacToe = () => {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(true);
-  
-  const calculateWinner = (squares) => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
+const Calculator = () => {
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState('');
+
+  const handleButtonClick = (value) => {
+    setInput(input + value);
   };
 
-  const handleClick = (index) => {
-    const squares = board.slice();
-    if (calculateWinner(squares) || squares[index]) {
-      return;
-    }
-    squares[index] = isXNext ? 'X' : 'O';
-    setBoard(squares);
-    setIsXNext(!isXNext);
+  const handleClear = () => {
+    setInput('');
+    setResult('');
   };
 
-  const winner = calculateWinner(board);
-  const status = winner ? `Winner: ${winner}` : `Next player: ${isXNext ? 'X' : 'O'}`;
+  const handleCalculate = () => {
+    try {
+      // Use eval to compute the result (caution: eval can be dangerous if used improperly)
+      const evalResult = eval(input);
+      setResult(evalResult);
+    } catch (error) {
+      setResult('Error');
+    }
+  };
 
   return (
-    <div className="game">
-      <div className="status">{status}</div>
-      <div className="board">
-        {board.map((square, index) => (
-          <button key={index} className="square" onClick={() => handleClick(index)}>
-            {square}
-          </button>
-        ))}
+    <div className="calculator">
+      <div className="display">
+        <div className="input">{input}</div>
+        <div className="result">{result}</div>
       </div>
-      <button className="reset" onClick={() => setBoard(Array(9).fill(null))}>
-        Reset Game
-      </button>
+      <div className="buttons">
+        <button onClick={() => handleButtonClick('1')}>1</button>
+        <button onClick={() => handleButtonClick('2')}>2</button>
+        <button onClick={() => handleButtonClick('3')}>3</button>
+        <button onClick={() => handleButtonClick('+')}>+</button>
+        <button onClick={() => handleButtonClick('4')}>4</button>
+        <button onClick={() => handleButtonClick('5')}>5</button>
+        <button onClick={() => handleButtonClick('6')}>6</button>
+        <button onClick={() => handleButtonClick('-')}>-</button>
+        <button onClick={() => handleButtonClick('7')}>7</button>
+        <button onClick={() => handleButtonClick('8')}>8</button>
+        <button onClick={() => handleButtonClick('9')}>9</button>
+        <button onClick={() => handleButtonClick('*')}>*</button>
+        <button onClick={() => handleButtonClick('0')}>0</button>
+        <button onClick={() => handleButtonClick('.')}>,</button>
+        <button onClick={handleCalculate}>=</button>
+        <button onClick={() => handleButtonClick('/')}>/</button>
+        <button onClick={handleClear}>C</button>
+      </div>
     </div>
   );
 };
 
-const App = () => {
-  return (
-    <div className="App">
-      <h1>Tic Tac Toe</h1>
-      <TicTacToe />
-    </div>
-  );
-};
-
-export default App;
-
+export default Calculator;
